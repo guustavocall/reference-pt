@@ -1,77 +1,47 @@
----
-title: "|"
-title_expanded: OU
-categories: [ "Structure" ]
-subCategories: [ "Bitwise Operators" ]
----
+// Defina os pinos dos relés
+int relayPin1 = 2;
+int relayPin2 = 3;
+int relayPin3 = 4;
+int relayPin4 = 5;
 
-= | OU Bitwise
+// Defina o pino do sensor de detecção de chuva
+int rainSensorPin = 6;
 
-// OVERVIEW SECTION STARTS
-[#overview]
---
+void setup() {
+  // Inicialize os pinos dos relés como saídas
+  pinMode(relayPin1, OUTPUT);
+  pinMode(relayPin2, OUTPUT);
+  pinMode(relayPin3, OUTPUT);
+  pinMode(relayPin4, OUTPUT);
 
-[float]
-=== Descrição
-O operador bitwise OU em C++ é o caractere barra vertical, `|`. Da mesma forma que o operador `&`, `|` opera  independentemente em cada bit dos dois operandos, mas seu propósito é diferente (duh!). O resultado da operação OU entre dois bits é 1 se qualquer um ou ambos os bits de entrada são 1, do contrário é 0.
-[%hardbreaks]
+  // Inicialize o pino do sensor de detecção de chuva como entrada
+  pinMode(rainSensorPin, INPUT);
 
-Explicado de outra forma:
+  // Inicialmente, ligue os relés
+  digitalWrite(relayPin1, HIGH);
+  digitalWrite(relayPin2, HIGH);
+  digitalWrite(relayPin3, HIGH);
+  digitalWrite(relayPin4, HIGH);
+}
 
-    0  0  1  1    operando1
-    0  1  0  1    operando2
-    ----------
-    0  1  1  1    (operando1 | operando2) - resultado retornado
-[%hardbreaks]
+void loop() {
+  // Leia o valor do sensor de detecção de chuva
+  int rainValue = digitalRead(rainSensorPin);
 
---
-// OVERVIEW SECTION ENDS
+  // Se o sensor de detecção de chuva detectar chuva (LOW), desligue os relés
+  if (rainValue == LOW) {
+    digitalWrite(relayPin1, LOW);
+    digitalWrite(relayPin2, LOW);
+    digitalWrite(relayPin3, LOW);
+    digitalWrite(relayPin4, LOW);
+  } else {
+    // Caso contrário, ligue os relés
+    digitalWrite(relayPin1, HIGH);
+    digitalWrite(relayPin2, HIGH);
+    digitalWrite(relayPin3, HIGH);
+    digitalWrite(relayPin4, HIGH);
+  }
 
-
-
-// HOW TO USE SECTION STARTS
-[#howtouse]
---
-
-[float]
-=== Código de Exemplo
-
-[source,arduino]
-----
-int a =  92;    // em binário: 0000000001011100
-int b = 101;    // em binário: 0000000001100101
-int c = a | b;  // resultado:    0000000001111101, ou 125 em decimal.
-----
-[%hardbreaks]
-
-Um dos usos mais comuns do OU bit-a-bit é "setar" um ou mais bits em um valor.
-
-[source,arduino]
-----
-// Nota: Esse código é específico para a arquitetura AVR
-// configura os bits de direção para os pinos 2 a 7, deixa 0 e 1 intocados (xx | 00 == xx)
-// Equivale a pinMode(pino, OUTPUT) para os pinos 2 a 7 no Arduino Uno ou Nano
-DDRD = DDRD | B11111100; 
-// o mesmo que pinMode(pino, OUTPUT) para os pinos 2 a 7
-----
-
---
-// HOW TO USE SECTION ENDS
-
-
-// SEE ALSO SECTION
-[#see_also]
---
-
-[float]
-=== Ver Também
-
-
-[role="language"]
-#LINGUAGEM# link:../../boolean-operators/logicalor[|| OU lógico]
-
-[role="example"]
-#EXEMPLO# https://www.arduino.cc/playground/Code/BitMath[Tutorial BitMath (Em Inglês)^]
-
---
-// SEE ALSO SECTION ENDS
+  // Adicione um pequeno atraso para evitar flutuações
+  delay(1000);
+}
